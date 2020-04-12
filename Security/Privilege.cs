@@ -22,7 +22,9 @@ namespace SweetPotato {
         public static uint TOKEN_ALL_ACCESS = STANDARD_RIGHTS_REQUIRED | TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE | TOKEN_IMPERSONATE | TOKEN_QUERY | TOKEN_QUERY_SOURCE | TOKEN_ADJUST_PRIVILEGES | TOKEN_ADJUST_GROUPS | TOKEN_ADJUST_DEFAULT | TOKEN_ADJUST_SESSIONID;
         public static uint MAXIMUM_ALLOWED = 0x02000000;
 
+        public static uint DETACHED_PROCESS = 0x00000008;
         public static uint CREATE_NEW_CONSOLE = 0x00000010;
+
 
         public enum SECURITY_IMPERSONATION_LEVEL {
             SecurityAnonymous,
@@ -87,6 +89,7 @@ namespace SweetPotato {
 
         public enum CreationFlags {
             DefaultErrorMode = 0x04000000,
+            DetachedProcess = 0x00000008,
             NewConsole = 0x00000010,
             NewProcessGroup = 0x00000200,
             SeparateWOWVDM = 0x00000800,
