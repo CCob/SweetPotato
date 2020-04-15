@@ -124,7 +124,7 @@ namespace SweetPotato {
                     string finalArgs = null;
 
                     if(programArgs != null)
-                        finalArgs = string.Format("\"{0}\" {1}", program, args);
+                        finalArgs = string.Format("\"{0}\" {1}", program, programArgs);
 
                     if (executionMethod == ExecutionMethod.Token) {
                         if (!CreateProcessWithTokenW(potatoAPI.Token, 0, program, finalArgs, CreationFlags.NewConsole, IntPtr.Zero, null, ref si, out pi)) {
