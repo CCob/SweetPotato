@@ -241,7 +241,8 @@ namespace SweetPotato {
             switch (messageType) {
                 case 1:
                     //NTLM type 1 message
-                    return negotiator.HandleType1(ntlm);
+                    negotiator.HandleType1(ntlm);
+                    return 0;
                 case 2:
                     //NTLM type 2 message
                     int result = negotiator.HandleType2(ntlm);
