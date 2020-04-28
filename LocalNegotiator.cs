@@ -20,24 +20,31 @@ namespace SweetPotato {
             }
         } 
 
-        public int HandleType1(byte[] ntmlBytes) {
+        public bool HandleType1(byte[] ntmlBytes) {
 
             TimeStamp ts = new TimeStamp();
 
             int status = AcquireCredentialsHandle(null, "Negotiate", SECPKG_CRED_INBOUND, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, hCred, ts);
 
             if (status != SEC_E_OK) {
-                Console.WriteLine("Error in AquireCredentialsHandle");
-                return -1;
+                Console.WriteLine("[!] Error {0} result from AcquireCredentialsHandle", status);
+                return false;
             }
 
             SecBufferDesc secClientBufferDesc = new SecBufferDesc(ntmlBytes);
-            secServerBufferDesc = new SecBufferDesc(256);
+            secServerBufferDesc = new SecBufferDesc(512);
 
             UInt32 fContextAttr;
 
-            return AcceptSecurityContext(hCred, null, ref secClientBufferDesc, ASC_REQ_CONNECTION,
+            status = AcceptSecurityContext(hCred, null, ref secClientBufferDesc, ASC_REQ_CONNECTION,
                 SECURITY_NATIVE_DREP, phContext, out secServerBufferDesc, out fContextAttr, ts);
+
+            if(status != SEC_E_OK && status != SEC_I_CONTINUE_NEEDED) {
+                Console.WriteLine("[!] Error {0} result from AcceptSecurityContext", status);
+                return false;
+            }
+
+            return true;
         }
 
         public int HandleType2(byte[] ntlmBytes) {

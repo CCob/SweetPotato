@@ -90,8 +90,14 @@ namespace SweetPotato {
             Socket clientSocket = listenSocket.Accept();
 
             string authHeader = GetAuthorizationHeader(clientSocket);
-            negotiator.HandleType1(Convert.FromBase64String(authHeader));
-            
+
+            if (!negotiator.HandleType1(Convert.FromBase64String(authHeader))) { 
+                Console.Write("Failed to handle type SPNEGO");
+                clientSocket.Close();
+                listenSocket.Close();
+                return;
+            }
+                        
             string challengeResponse = String.Format(
                 "HTTP/1.1 401 Unauthorized\n" +
                 "WWW-Authenticate: Negotiate {0}\n" +
@@ -235,7 +241,8 @@ namespace SweetPotato {
             switch (messageType) {
                 case 1:
                     //NTLM type 1 message
-                    return negotiator.HandleType1(ntlm);
+                    negotiator.HandleType1(ntlm);
+                    return 0;
                 case 2:
                     //NTLM type 2 message
                     int result = negotiator.HandleType2(ntlm);
