@@ -144,6 +144,7 @@ namespace SweetPotato {
 
         public const int TOKEN_QUERY = 0x00008;
         public const int SEC_E_OK = 0;
+        public const int SEC_I_CONTINUE_NEEDED = 0x00090312;
         public const int SECPKG_CRED_OUTBOUND = 2;
         public const int SECURITY_NATIVE_DREP = 0x10;
         public const int SECPKG_CRED_INBOUND = 1;
