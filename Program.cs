@@ -13,16 +13,38 @@ namespace SweetPotato {
             options.WriteOptionDescriptions(Console.Out);
         }
 
+        public static string HKLM_GetString(string path, string key) {
+            try {
+                RegistryKey rk = Registry.LocalMachine.OpenSubKey(path);
+                if (rk == null) return "";
+                return (string)rk.GetValue(key);
+            } catch { return ""; }
+        }
+
+        //https://stackoverflow.com/questions/6331826/get-os-version-friendly-name-in-c-sharp
+        public static string FriendlyName() {
+            string ProductName = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
+            string CSDVersion = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CSDVersion");
+            if (ProductName != "") {
+                return (ProductName.StartsWith("Microsoft") ? "" : "Microsoft ") + ProductName +
+                            (CSDVersion != "" ? " " + CSDVersion : "");
+            }
+            return "";
+        }
+
         static bool IsBITSRequired() {
 
             if(Environment.OSVersion.Version.Major < 10) {
                 return false;
             }
 
+            string friendlyName = FriendlyName();
+
             RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             var buildNumber = UInt32.Parse(registryKey.GetValue("ReleaseId").ToString());
 
-            if(buildNumber <= 1809) {
+            if( (buildNumber <= 1809 && friendlyName.Contains("Windows 10")) ||
+                buildNumber < 1809 && friendlyName.Contains("Windows Server")){
                 return false;
             }
 
