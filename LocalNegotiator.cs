@@ -3,7 +3,7 @@ using static SweetPotato.SSPIHelper;
 
 namespace SweetPotato {
 
-    public class LocalNegotiator {
+    internal class LocalNegotiator {
 
         const int ASC_REQ_ALLOCATE_MEMORY = 0x00000100;
         const int ASC_REQ_CONNECTION = 0x00000800;
@@ -32,7 +32,7 @@ namespace SweetPotato {
             }
 
             SecBufferDesc secClientBufferDesc = new SecBufferDesc(ntmlBytes);
-            secServerBufferDesc = new SecBufferDesc(512);
+            secServerBufferDesc = new SecBufferDesc(8192); 
 
             UInt32 fContextAttr;
 

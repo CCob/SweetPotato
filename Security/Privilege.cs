@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace SweetPotato {
-    public class ImpersonationToken {
+    internal class ImpersonationToken {
         // Constants that are going to be used during our procedure.
         public static uint SE_PRIVILEGE_ENABLED = 0x00000002;
         public static uint STANDARD_RIGHTS_REQUIRED = 0x000F0000;
@@ -162,6 +162,9 @@ namespace SweetPotato {
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool OpenProcessToken(IntPtr ProcessHandle, UInt32 DesiredAccess, out IntPtr TokenHandle);
 
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool OpenThreadToken(IntPtr ThreadHandle, uint DesiredAccess, bool OpenAsSelf, out IntPtr TokenHandle);
+
         [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public extern static bool DuplicateTokenEx(IntPtr hExistingToken, uint dwDesiredAccess, IntPtr lpTokenAttributes,
             SECURITY_IMPERSONATION_LEVEL ImpersonationLevel, TOKEN_TYPE TokenType, out IntPtr phNewToken);
@@ -171,6 +174,9 @@ namespace SweetPotato {
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr GetCurrentProcess();
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetCurrentThread();
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

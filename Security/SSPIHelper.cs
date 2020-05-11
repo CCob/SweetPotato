@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace SweetPotato {
-    public class SSPIHelper {
+    internal class SSPIHelper {
 
         public enum SecBufferType {
             SECBUFFER_VERSION = 0,
@@ -99,19 +99,19 @@ namespace SweetPotato {
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
-        public class TimeStamp {
+        internal class TimeStamp {
             public uint LowPart;
             public int HighPart;
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
-        public class CredHandle {
+        internal class CredHandle {
             IntPtr LowPart;
             IntPtr HighPart;
         };
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
-        public class CtxHandle {
+        internal class CtxHandle {
             IntPtr LowPart;
             IntPtr HighPart;
         };

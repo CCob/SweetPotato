@@ -668,7 +668,7 @@ namespace Mono.Options
     }
 
 #if !PCL || NETSTANDARD1_3
-    public class ResponseFileSource : ArgumentSource {
+    internal class ResponseFileSource : ArgumentSource {
 
         public override string[] GetNames() {
             return new string[] { "@file" };
@@ -692,7 +692,7 @@ namespace Mono.Options
 #if !PCL
     [Serializable]
 #endif
-    public class OptionException : Exception {
+    internal class OptionException : Exception {
         private string option;
 
         public OptionException() {
@@ -1373,7 +1373,7 @@ namespace Mono.Options
         }
     }
 
-    public class Command {
+    internal class Command {
         public string Name { get; }
         public string Help { get; }
 
@@ -1487,7 +1487,7 @@ namespace Mono.Options
         }
     }
 
-    public class CommandSet : KeyedCollection<string, Command> {
+    internal class CommandSet : KeyedCollection<string, Command> {
         readonly string suite;
 
         OptionSet options;
@@ -1784,7 +1784,7 @@ namespace Mono.Options
         }
     }
 
-    public class HelpCommand : Command {
+    internal class HelpCommand : Command {
         public HelpCommand()
             : base("help", help: "Show this message and exit") {
         }

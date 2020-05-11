@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace SweetPotato {
 
     [ComVisible(true)]
-    public class StorageTrigger : IMarshal, IStorage {
+    internal class StorageTrigger : IMarshal, IStorage {
 
         private IStorage storage;
         private string binding;

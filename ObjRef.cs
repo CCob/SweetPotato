@@ -33,7 +33,7 @@ namespace SweetPotato {
         EPM_PROTOCOL_NULL = 0x21
     }
 
-    public class ObjRef {
+    internal class ObjRef {
 
         [Flags]
         enum Type : uint {
@@ -79,7 +79,7 @@ namespace SweetPotato {
             return ((MemoryStream)bw.BaseStream).ToArray();
         }
 
-        public class SecurityBinding {
+        internal class SecurityBinding {
 
             public readonly ushort AuthnSvc;
             public readonly ushort AuthzSvc;
@@ -122,7 +122,7 @@ namespace SweetPotato {
             }
         }
 
-        public class StringBinding {
+        internal class StringBinding {
             public readonly TowerProtocol TowerID;
             public readonly string NetworkAddress;
 
@@ -156,7 +156,7 @@ namespace SweetPotato {
             }
         }
 
-        public class DualStringArray {
+        internal class DualStringArray {
             private readonly ushort NumEntries;
             private readonly ushort SecurityOffset;
             public readonly StringBinding StringBinding;
@@ -190,7 +190,7 @@ namespace SweetPotato {
             }
         }
 
-        public class Standard {
+        internal class Standard {
 
             const ulong Oxid = 0x0703d84a06ec96cc;
             const ulong Oid = 0x539d029cce31ac;
