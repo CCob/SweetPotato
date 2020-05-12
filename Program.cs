@@ -62,7 +62,7 @@ namespace SweetPotato {
                 bool hasIncreaseQuota = EnablePrivilege(SecurityEntity.SE_INCREASE_QUOTA_NAME);
 
                 if(!hasImpersonate && !hasPrimary) {
-                    Console.WriteLine("[!] Cannot perform interception, neccessary priveleges missing.  Are you running under a Service account?");
+                    Console.WriteLine("[!] Cannot perform interception, necessary privileges missing.  Are you running under a Service account?");
                     return;
                 }
 

