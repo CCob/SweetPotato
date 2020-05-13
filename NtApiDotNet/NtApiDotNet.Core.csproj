@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<AssemblyName>NtApiDotNet</AssemblyName>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>NtApiDotNet</PackageId>
+    <Authors>James Forshaw</Authors>
+    <Company>Google Inc.</Company>
+    <Product>NtApiDotNet</Product>
+    <FileVersion>1.1.27.0</FileVersion>
+    <Copyright>Copyright © Google Inc. 2016-2020</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/googleprojectzero/sandbox-attacksurface-analysis-tools</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
+    <PackageReference Include="System.CodeDom" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+  <Compile Remove="Properties\AssemblyInfo.cs" />
+  <Compile Remove="Forms\*" />
+  </ItemGroup>
+</Project>

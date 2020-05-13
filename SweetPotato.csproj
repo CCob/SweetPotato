@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Costura.Fody.4.1.0\build\Costura.Fody.props" Condition="Exists('packages\Costura.Fody.4.1.0\build\Costura.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -27,6 +28,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -62,7 +65,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
@@ -81,403 +89,6 @@
     <Compile Include="Com\IStorage.cs" />
     <Compile Include="Com\IStream.cs" />
     <Compile Include="LocalNegotiator.cs" />
-    <Compile Include="NtApiDotNet\AccessCheckResult.cs" />
-    <Compile Include="NtApiDotNet\AccessMask.cs" />
-    <Compile Include="NtApiDotNet\AccessMaskEntry.cs" />
-    <Compile Include="NtApiDotNet\Ace.cs" />
-    <Compile Include="NtApiDotNet\Acl.cs" />
-    <Compile Include="NtApiDotNet\AlpcMessage.cs" />
-    <Compile Include="NtApiDotNet\AlpcMessageAttributes.cs" />
-    <Compile Include="NtApiDotNet\AlpcPortSection.cs" />
-    <Compile Include="NtApiDotNet\AnnontationAttributes.cs" />
-    <Compile Include="NtApiDotNet\BoundaryDescriptor.cs" />
-    <Compile Include="NtApiDotNet\BufferUtils.cs" />
-    <Compile Include="NtApiDotNet\CachedEnumerable.cs" />
-    <Compile Include="NtApiDotNet\ClaimSecurityAttribute.cs" />
-    <Compile Include="NtApiDotNet\CreateUserProcess.cs" />
-    <Compile Include="NtApiDotNet\CreateUserProcessResult.cs" />
-    <Compile Include="NtApiDotNet\DebugEvent.cs" />
-    <Compile Include="NtApiDotNet\DisposableList.cs" />
-    <Compile Include="NtApiDotNet\EaBuffer.cs" />
-    <Compile Include="NtApiDotNet\GenericMapping.cs" />
-    <Compile Include="NtApiDotNet\INtTransaction.cs" />
-    <Compile Include="NtApiDotNet\KnownSids.cs" />
-    <Compile Include="NtApiDotNet\MandatoryLabelAce.cs" />
-    <Compile Include="NtApiDotNet\MappedFile.cs" />
-    <Compile Include="NtApiDotNet\MemoryInformation.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\INdrConformantStructure.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\INdrNonEncapsulatedUnion.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\INdrStructure.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrContextHandle.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrDataRepresentation.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrDeferralStack.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrEmbeddedPointer.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrEmpty.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrEnum16.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrInt3264.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrInterfacePointer.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrMarshalBuffer.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrPickledType.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrPipe.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrUnmarshalBuffer.cs" />
-    <Compile Include="NtApiDotNet\Ndr\Marshal\NdrUnsupported.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrArrayTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrComProxyDefinition.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrCorrelationDescriptor.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrExpression.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrFormatter.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrHandleTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrMiscTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrNativeUtils.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrParser.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrParserException.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrPointerTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrProcedureDefinition.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrProtocolSequenceEndpoint.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrRpcServerInterface.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrSimpleTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrStringBuilder.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrStringTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrStructureTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrUnionTypes.cs" />
-    <Compile Include="NtApiDotNet\Ndr\NdrUserMarshalTypes.cs" />
-    <Compile Include="NtApiDotNet\NtAlpc.cs" />
-    <Compile Include="NtApiDotNet\NtAlpcNative.cs" />
-    <Compile Include="NtApiDotNet\NtAlpcUtils.cs" />
-    <Compile Include="NtApiDotNet\NtAsyncResult.cs" />
-    <Compile Include="NtApiDotNet\NtAtom.cs" />
-    <Compile Include="NtApiDotNet\NtAtomNative.cs" />
-    <Compile Include="NtApiDotNet\NtDebug.cs" />
-    <Compile Include="NtApiDotNet\NtDebugNative.cs" />
-    <Compile Include="NtApiDotNet\NtDesktop.cs" />
-    <Compile Include="NtApiDotNet\NtDesktopNative.cs" />
-    <Compile Include="NtApiDotNet\NtDirectory.cs" />
-    <Compile Include="NtApiDotNet\NtDirectoryNative.cs" />
-    <Compile Include="NtApiDotNet\NtEnlistment.cs" />
-    <Compile Include="NtApiDotNet\NtEnlistmentNative.cs" />
-    <Compile Include="NtApiDotNet\NtEtwRegistration.cs" />
-    <Compile Include="NtApiDotNet\NtEvent.cs" />
-    <Compile Include="NtApiDotNet\NtEventNative.cs" />
-    <Compile Include="NtApiDotNet\NtException.cs" />
-    <Compile Include="NtApiDotNet\NtFile.cs" />
-    <Compile Include="NtApiDotNet\NtFileNative.cs" />
-    <Compile Include="NtApiDotNet\NtFileUtils.cs" />
-    <Compile Include="NtApiDotNet\NtGeneric.cs" />
-    <Compile Include="NtApiDotNet\NtHandle.cs" />
-    <Compile Include="NtApiDotNet\NtHeap.cs" />
-    <Compile Include="NtApiDotNet\NtIoCompletion.cs" />
-    <Compile Include="NtApiDotNet\NtIoCompletionNative.cs" />
-    <Compile Include="NtApiDotNet\NtIoControlCode.cs" />
-    <Compile Include="NtApiDotNet\NtJob.cs" />
-    <Compile Include="NtApiDotNet\NtJobNative.cs" />
-    <Compile Include="NtApiDotNet\NtKey.cs" />
-    <Compile Include="NtApiDotNet\NtKeyNative.cs" />
-    <Compile Include="NtApiDotNet\NtKeyUtils.cs" />
-    <Compile Include="NtApiDotNet\NtKeyValue.cs" />
-    <Compile Include="NtApiDotNet\NtLdr.cs" />
-    <Compile Include="NtApiDotNet\NtLdrNative.cs" />
-    <Compile Include="NtApiDotNet\NtLocale.cs" />
-    <Compile Include="NtApiDotNet\NtMappedSection.cs" />
-    <Compile Include="NtApiDotNet\NtMutant.cs" />
-    <Compile Include="NtApiDotNet\NtMutantNative.cs" />
-    <Compile Include="NtApiDotNet\NtNamedPipeFile.cs" />
-    <Compile Include="NtApiDotNet\NtObject.cs" />
-    <Compile Include="NtApiDotNet\NtObjectNative.cs" />
-    <Compile Include="NtApiDotNet\NtObjectUtils.cs" />
-    <Compile Include="NtApiDotNet\NtObjectWithDuplicate.cs" />
-    <Compile Include="NtApiDotNet\NtObjectWithDuplicateAndInfo.cs" />
-    <Compile Include="NtApiDotNet\NtPartition.cs" />
-    <Compile Include="NtApiDotNet\NtPartitionNative.cs" />
-    <Compile Include="NtApiDotNet\NtProcess.cs" />
-    <Compile Include="NtApiDotNet\NtProcessCreateConfig.cs" />
-    <Compile Include="NtApiDotNet\NtProcessCreateResult.cs" />
-    <Compile Include="NtApiDotNet\NtProcessMitigations.cs" />
-    <Compile Include="NtApiDotNet\NtProcessNative.cs" />
-    <Compile Include="NtApiDotNet\NtProcessTrustletConfig.cs" />
-    <Compile Include="NtApiDotNet\NtRegistryTransaction.cs" />
-    <Compile Include="NtApiDotNet\NtRegistryTransactionNative.cs" />
-    <Compile Include="NtApiDotNet\NtResourceManager.cs" />
-    <Compile Include="NtApiDotNet\NtResourceManagerNative.cs" />
-    <Compile Include="NtApiDotNet\NtResult.cs" />
-    <Compile Include="NtApiDotNet\NtRtl.cs" />
-    <Compile Include="NtApiDotNet\NtSection.cs" />
-    <Compile Include="NtApiDotNet\NtSectionNative.cs" />
-    <Compile Include="NtApiDotNet\NtSecurity.cs" />
-    <Compile Include="NtApiDotNet\NtSecurityNative.cs" />
-    <Compile Include="NtApiDotNet\NtSemaphore.cs" />
-    <Compile Include="NtApiDotNet\NtSemaphoreNative.cs" />
-    <Compile Include="NtApiDotNet\NtSession.cs" />
-    <Compile Include="NtApiDotNet\NtStatus.cs" />
-    <Compile Include="NtApiDotNet\NtStructures.cs" />
-    <Compile Include="NtApiDotNet\NtSymbolicLink.cs" />
-    <Compile Include="NtApiDotNet\NtSymbolicLinkNative.cs" />
-    <Compile Include="NtApiDotNet\NtSystemInfo.cs" />
-    <Compile Include="NtApiDotNet\NtSystemInfoNative.cs" />
-    <Compile Include="NtApiDotNet\NtThread.cs" />
-    <Compile Include="NtApiDotNet\NtThreadNative.cs" />
-    <Compile Include="NtApiDotNet\NtTimer.cs" />
-    <Compile Include="NtApiDotNet\NtTimerNative.cs" />
-    <Compile Include="NtApiDotNet\NtToken.cs" />
-    <Compile Include="NtApiDotNet\NtTokenNative.cs" />
-    <Compile Include="NtApiDotNet\NtTrace.cs" />
-    <Compile Include="NtApiDotNet\NtTraceNative.cs" />
-    <Compile Include="NtApiDotNet\NtTransaction.cs" />
-    <Compile Include="NtApiDotNet\NtTransactionManager.cs" />
-    <Compile Include="NtApiDotNet\NtTransactionManagerNative.cs" />
-    <Compile Include="NtApiDotNet\NtTransactionManagerUtils.cs" />
-    <Compile Include="NtApiDotNet\NtTransactionNative.cs" />
-    <Compile Include="NtApiDotNet\NtType.cs" />
-    <Compile Include="NtApiDotNet\NtTypeFactory.cs" />
-    <Compile Include="NtApiDotNet\NtUserProcessParameters.cs" />
-    <Compile Include="NtApiDotNet\NtVirtualMemory.cs" />
-    <Compile Include="NtApiDotNet\NtVirtualMemoryNative.cs" />
-    <Compile Include="NtApiDotNet\NtWait.cs" />
-    <Compile Include="NtApiDotNet\NtWaitHandle.cs" />
-    <Compile Include="NtApiDotNet\NtWaitNative.cs" />
-    <Compile Include="NtApiDotNet\NtWaitTimeout.cs" />
-    <Compile Include="NtApiDotNet\NtWindow.cs" />
-    <Compile Include="NtApiDotNet\NtWindowNative.cs" />
-    <Compile Include="NtApiDotNet\NtWindowStation.cs" />
-    <Compile Include="NtApiDotNet\NtWindowStationNative.cs" />
-    <Compile Include="NtApiDotNet\NtWnf.cs" />
-    <Compile Include="NtApiDotNet\NtWnfNative.cs" />
-    <Compile Include="NtApiDotNet\NtWnfWellKnownNames.cs" />
-    <Compile Include="NtApiDotNet\ObjectAttributes.cs" />
-    <Compile Include="NtApiDotNet\OptionalValues.cs" />
-    <Compile Include="NtApiDotNet\PrivilegeCheckResult.cs" />
-    <Compile Include="NtApiDotNet\ProcessAttribute.cs" />
-    <Compile Include="NtApiDotNet\ProcessModule.cs" />
-    <Compile Include="NtApiDotNet\ReparseBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeAlpcDataViewBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeAlpcPortMessageBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeAlpcPortSectionHandle.cs" />
-    <Compile Include="NtApiDotNet\SafeAlpcSecurityContextHandle.cs" />
-    <Compile Include="NtApiDotNet\SafeArrayBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeBufferGeneric.cs" />
-    <Compile Include="NtApiDotNet\SafeHandleListHandle.cs" />
-    <Compile Include="NtApiDotNet\SafeHGlobalBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeIoStatusBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeKernelObjectHandle.cs" />
-    <Compile Include="NtApiDotNet\SafePrivilegeSetBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeProcessHeapBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeProcessParametersBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeSidBufferHandle.cs" />
-    <Compile Include="NtApiDotNet\SafeStringBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeStructureInOutBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeTokenGroupsBuffer.cs" />
-    <Compile Include="NtApiDotNet\SafeTokenPrivilegesBuffer.cs" />
-    <Compile Include="NtApiDotNet\SecurityCapabilities.cs" />
-    <Compile Include="NtApiDotNet\SecurityDescriptor.cs" />
-    <Compile Include="NtApiDotNet\SecurityDescriptorSid.cs" />
-    <Compile Include="NtApiDotNet\SecurityQualityOfService.cs" />
-    <Compile Include="NtApiDotNet\Security\Policy\CentralAccessPolicy.cs" />
-    <Compile Include="NtApiDotNet\Security\Policy\CentralAccessRule.cs" />
-    <Compile Include="NtApiDotNet\Sid.cs" />
-    <Compile Include="NtApiDotNet\SidIdentifierAuthority.cs" />
-    <Compile Include="NtApiDotNet\ThreadImpersonationContext.cs" />
-    <Compile Include="NtApiDotNet\TokenGroupsBuilder.cs" />
-    <Compile Include="NtApiDotNet\TokenPrivilege.cs" />
-    <Compile Include="NtApiDotNet\TokenPrivilegesBuilder.cs" />
-    <Compile Include="NtApiDotNet\UnicodeString.cs" />
-    <Compile Include="NtApiDotNet\UnicodeStringBytesSafeBuffer.cs" />
-    <Compile Include="NtApiDotNet\UserGroup.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\ASN1Utils.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\DERParser.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\DERTagType.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\DERUtils.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\DERValue.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\OIDValues.cs" />
-    <Compile Include="NtApiDotNet\Utilities\ASN1\UniversalTag.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\CrossBitnessProcessMemoryReader.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\CrossBitnessTypeAttribute.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\CurrentProcessMemoryReader.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\IMemoryReader.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\ProcessMemoryReader.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\ProcessMemoryStream.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Memory\SafeBufferWrapper.cs" />
-    <Compile Include="NtApiDotNet\Utilities\SafeBuffers\SafeGuidArrayBuffer.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Security\MD4.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Security\ObjectTypeTree.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Text\BinaryEncoding.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Text\HexDumpBuilder.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Text\StringUtils.cs" />
-    <Compile Include="NtApiDotNet\Utilities\Token\ClaimSecurityAttributeBuilder.cs" />
-    <Compile Include="NtApiDotNet\Win32\AppContainerProfile.cs" />
-    <Compile Include="NtApiDotNet\Win32\ConsoleSession.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\ArrayTypeInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\BaseTypeInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\DataSymbolInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\DbgHelpSymbolResolver.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\EnumProcessModulesFilter.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\EnumTypeInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\IMAGEHLP_MODULE64.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\IMAGEHLP_SYMBOL_TYPE_INFO.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\ISymbolTypeResolver.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\MODULEINFO.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\PointerTypeInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\SymbolInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\SymbolInformationType.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\SYMBOL_INFO.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\SymOptions.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\SymTagEnum.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\SYM_TYPE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\TI_FINDCHILDREN_PARAMS.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\TypeInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\TypeInformationCache.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\UdtKind.cs" />
-    <Compile Include="NtApiDotNet\Win32\Debugger\UserDefinedTypeInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\Device\DeviceNativeMethods.cs" />
-    <Compile Include="NtApiDotNet\Win32\Device\DeviceUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\DirectoryService\DirectoryServiceAccessRights.cs" />
-    <Compile Include="NtApiDotNet\Win32\DirectoryService\DirectoryServiceUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\EtwServiceTriggerInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\EventTrace.cs" />
-    <Compile Include="NtApiDotNet\Win32\EventTraceLog.cs" />
-    <Compile Include="NtApiDotNet\Win32\EventTraceProvider.cs" />
-    <Compile Include="NtApiDotNet\Win32\EventTracing.cs" />
-    <Compile Include="NtApiDotNet\Win32\ExecutableManifest.cs" />
-    <Compile Include="NtApiDotNet\Win32\ISymbolResolver.cs" />
-    <Compile Include="NtApiDotNet\Win32\LogonUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\PackageIdentity.cs" />
-    <Compile Include="NtApiDotNet\Win32\RpcAlpcServer.cs" />
-    <Compile Include="NtApiDotNet\Win32\RpcClient.cs" />
-    <Compile Include="NtApiDotNet\Win32\RpcEndpoint.cs" />
-    <Compile Include="NtApiDotNet\Win32\RpcEndpointMapper.cs" />
-    <Compile Include="NtApiDotNet\Win32\RpcServer.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\CodeGenUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\MarshalHelperBuilder.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\RpcClientBase.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\RpcClientBuilder.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\RpcClientBuilderArguments.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\RpcClientResponse.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\RpcTypeDescriptor.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\RpcUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\RpcNamedPipeTransport.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\ExtendedErrorInfo.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\IRpcClientTransport.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\RpcAlpcClientTransport.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\RpcAlpcInternals.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\RpcClientTransportFactory.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\RpcExtendedErrorInfo.cs" />
-    <Compile Include="NtApiDotNet\Win32\Rpc\Transport\RpcFaultException.cs" />
-    <Compile Include="NtApiDotNet\Win32\RunningService.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeAuditBuffer.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeAuthZClientContextHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeAuthZResourceManagerHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeCoTaskMemHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeLocalAllocBuffer.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeLsaHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeLsaLogonHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeLsaMemoryBuffer.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeHandles\SafeLsaReturnBufferHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeLoadLibraryHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\SafeWin32Exception.cs" />
-    <Compile Include="NtApiDotNet\Win32\SecurityInformationImpl.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditAccessRights.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditCategory.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditGlobalSaclType.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditPolicyEventType.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditPolicyFlags.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditSecurityUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Audit\AuditSubCategory.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\ASN1AuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\AuthenticationCredentials.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\AuthenticationFlags.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\AuthenticationImpersonationContext.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\AuthenticationPackage.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\AuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\ClientAuthenticationContext.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\CredentialHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\GSSAPIUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\IAuthenticationContext.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosAPReplyAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosAPRequestAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosEncryptedData.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosKey.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosTGTReplyAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosTGTRequestAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosTicket.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KerberosUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KRB_CHKSUM_TYPE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KRB_ENC_TYPE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KRB_MSG_TYPE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\KRB_NAME_TYPE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Kerberos\PrincipalName.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\LogonSession.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Negotiate\NegotiateAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmAuthenticateAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmAuthenticateAuthenticationTokenV2.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmAvPair.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmChallengeAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmNegotiateAuthenticationToken.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\Ntlm\NtlmUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\ServerAuthenticationContext.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\ServicePrincipalName.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authentication\UserCredentials.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\AuthZAccessCheckResult.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\AuthZContext.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\AuthZResourceManager.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\ProgressInvokeSetting.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\SecurityDescriptorInheritanceSource.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\SeObjectType.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Authorization\TreeSecInfo.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\AUDIT_POLICY_INFORMATION.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\AuthZAccessCheckFlags.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\AUTHZ_ACCESS_REPLY.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\AUTHZ_ACCESS_REQUEST.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\AUTHZ_CONTEXT_INFORMATION_CLASS.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\CENTRAL_ACCESS_POLICY.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\CENTRAL_ACCESS_POLICY_ENTRY.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\INHERITED_FROM.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\KERB_LOGON_SUBMIT_TYPE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\KERB_S4U_LOGON.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\KERB_TICKET_LOGON.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\LsaLogonUserFlags.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\LsaString.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\LSA_ENUMERATION_INFORMATION.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\LSA_LAST_INTER_LOGON_INFO.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\OptionalLuid.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\POLICY_AUDIT_SID_ARRAY.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\QUOTA_LIMITS.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecBuffer.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecBufferDesc.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecBufferType.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecHandle.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecPkgContextStructs.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecPkgContext_SessionKey.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecPkgInfo.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SECPKG_ATTR.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecStatusCode.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecureStringMarshal.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecurityNativeMethods.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SECURITY_LOGON_SESSION_DATA.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SecWinNtAuthIdentityFlags.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SEC_CHANNEL_BINDING.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SEC_WINNT_AUTH_IDENTITY.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\SEC_WINNT_AUTH_IDENTITY_EX.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Native\TOKEN_SOURCE.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Policy\AccountRight.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Policy\AccountRightLogonType.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Policy\LsaPolicyAccessRights.cs" />
-    <Compile Include="NtApiDotNet\Win32\Security\Win32Security.cs" />
-    <Compile Include="NtApiDotNet\Win32\SendInput.cs" />
-    <Compile Include="NtApiDotNet\Win32\ServiceInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\ServiceTriggerCustomData.cs" />
-    <Compile Include="NtApiDotNet\Win32\ServiceTriggerInformation.cs" />
-    <Compile Include="NtApiDotNet\Win32\ServiceUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\SymbolLoadedModule.cs" />
-    <Compile Include="NtApiDotNet\Win32\SymbolResolver.cs" />
-    <Compile Include="NtApiDotNet\Win32\TokenUtils.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32Debug.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32Error.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32NativeMethods.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32Process.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32ProcessConfig.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32ProcessNative.cs" />
-    <Compile Include="NtApiDotNet\Win32\Win32Utils.cs" />
-    <Compile Include="NtApiDotNet\Win32\WnfServiceTriggerInformation.cs" />
     <Compile Include="ObjRef.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="PrintSpoofer.cs" />
@@ -491,6 +102,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="app.manifest" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -500,7 +112,21 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NtApiDotNet\Readme.txt" />
+    <ProjectReference Include="NtApiDotNet\NtApiDotNet.csproj">
+      <Project>{6aeb5004-6093-4c23-aeae-911d64cacc58}</Project>
+      <Name>NtApiDotNet</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\Fody.6.0.0\build\Fody.targets" Condition="Exists('packages\Fody.6.0.0\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Fody.6.0.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Fody.6.0.0\build\Fody.targets'))" />
+    <Error Condition="!Exists('packages\Costura.Fody.4.1.0\build\Costura.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Costura.Fody.4.1.0\build\Costura.Fody.props'))" />
+  </Target>
 </Project>
