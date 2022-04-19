@@ -35,6 +35,22 @@ namespace SweetPotato {
 
             uint written;
             byte[] data = objRef.GetBytes();
+            /*
+            byte[] data_0 = new byte[32];
+            Array.Copy(data, data_0, 32);
+            var rnd = new Random();
+            var random_ipid = new byte[32];
+            rnd.NextBytes(random_ipid);
+            var total_length = (binding.Length * 2 + 6 + 8) / 2;
+            var sec_offset = (binding.Length * 2 + 6) / 2;
+            byte[] data_4 = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x00, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 };
+            byte[] data_1 = new byte[4];
+            data_1[0] = Convert.ToByte(total_length);
+            data_1[1] = Convert.ToByte(0);
+            data_1[2] = Convert.ToByte(sec_offset);
+            data_1[3] = Convert.ToByte(0);
+            var size = data_0.Length + random_ipid.Length + data_1.Length + binding.Length * 2 + 1 + data_4.Length;
+            */
             pstm.Write(data, (uint)data.Length, out written);
         }
 
