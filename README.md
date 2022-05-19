@@ -11,7 +11,7 @@ SweetPotato by @_EthicalChaos_
   -m, --method=VALUE         Auto,User,Thread (default Auto)
   -p, --prog=VALUE           Program to launch (default cmd.exe)
   -a, --args=VALUE           Arguments for program (default null)
-  -e, --exploit=VALUE        Exploit mode [DCOM|WinRM|PrintSpoofer(default)]
+  -e, --exploit=VALUE        Exploit mode [efs|DCOM|WinRM|PrintSpoofer(default)]
   -l, --listenPort=VALUE     COM server listen port (default 6666)
   -h, --help                 Display this help
 ```
