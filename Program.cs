@@ -33,13 +33,14 @@ namespace SweetPotato {
                 );
 
             OptionSet option_set = new OptionSet()
-                .Add<string>("c=|clsid=", "CLSID (default BITS: 4991D34B-80A1-4291-83B6-3328366B9097)", v => clsId = v)
+                .Add<string>("c=|clsid=", "CLSID (default BITS:\n4991D34B-80A1-4291-83B6-3328366B9097)", v => clsId = v)
                 .Add<ExecutionMethod>("m=|method=", "Auto,User,Thread (default Auto)", v => executionMethod = v)
                 .Add("p=|prog=", "Program to launch (default cmd.exe)", v => program = v)
                 .Add("a=|args=", "Arguments for program (default null)", v => programArgs = v)
-                .Add<PotatoAPI.Mode>("e=|exploit=", "Exploit mode [DCOM|WinRM|EfsRpc|PrintSpoofer(default)] ", v => mode = v)
+                .Add<PotatoAPI.Mode>("e=|exploit=", "Exploit mode\n[DCOM|WinRM|EfsRpc|PrintSpoofer(default)] ", v => mode = v)
                 .Add<ushort>("l=|listenPort=", "COM server listen port (default 6666)", v => port = v)
                 .Add("h|help", "Display this help", v => showHelp = v != null);
+
 
             try {
 
