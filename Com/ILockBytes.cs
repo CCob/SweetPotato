@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace SweetPotato {
     [ComVisible(false)]
@@ -13,7 +14,7 @@ namespace SweetPotato {
         void SetSize(long cb);
         void LockRegion(long libOffset, long cb, int dwLockType);
         void UnlockRegion(long libOffset, long cb, int dwLockType);
-        void Stat(out System.Runtime.InteropServices.STATSTG pstatstg, int grfStatFlag);
+        void Stat(out ComTypes.STATSTG pstatstg, int grfStatFlag);
 
     }
 
