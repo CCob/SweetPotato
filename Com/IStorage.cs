@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace SweetPotato {
 
@@ -19,10 +20,10 @@ namespace SweetPotato {
         void EnumElements([In] uint reserved1, [In] IntPtr reserved2, [In] uint reserved3, [MarshalAs(28)] out IEnumSTATSTG ppEnum);
         void DestroyElement([MarshalAs(21)] [In] string pwcsName);
         void RenameElement([MarshalAs(21)] [In] string pwcsOldName, [MarshalAs(21)] [In] string pwcsNewName);
-        void SetElementTimes([MarshalAs(21)] [In] string pwcsName, [MarshalAs(42)] [In] FILETIME[] pctime, [MarshalAs(42)] [In] FILETIME[] patime, [MarshalAs(42)] [In] FILETIME[] pmtime);
+        void SetElementTimes([MarshalAs(21)] [In] string pwcsName, [MarshalAs(42)] [In] ComTypes.FILETIME[] pctime, [MarshalAs(42)] [In] ComTypes.FILETIME[] patime, [MarshalAs(42)] [In] ComTypes.FILETIME[] pmtime);
         void SetClass([In] ref Guid clsid);
         void SetStateBits([In] uint grfStateBits, [In] uint grfMask);
-        void Stat([MarshalAs(42)] [Out] STATSTG[] pstatstg, [In] uint grfStatFlag);
+        void Stat([MarshalAs(42)] [Out] ComTypes.STATSTG[] pstatstg, [In] uint grfStatFlag);
     }
 }
 

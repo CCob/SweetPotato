@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace SweetPotato {
     [ComImport, Guid("0000000c-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -13,7 +14,7 @@ namespace SweetPotato {
         void Revert();
         void LockRegion(long libOffset, long cb, uint dwLockType);
         void UnlockRegion(long libOffset, long cb, uint dwLockType);
-        void Stat(out STATSTG pstatstg, uint grfStatFlag);
+        void Stat(out ComTypes.STATSTG pstatstg, uint grfStatFlag);
         void Clone(out IStream ppstm);
     }
 }
