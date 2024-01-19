@@ -4,7 +4,7 @@
 ```
 SweetPotato by @_EthicalChaos_
   Orignal RottenPotato code and exploit by @foxglovesec
-  Weaponized JuciyPotato by @decoder_it and @Guitro along with BITS WinRM discovery
+  Weaponized JuicyPotato by @decoder_it and @Guitro along with BITS WinRM discovery
   PrintSpoofer discovery and original exploit by @itm4n
   EfsRpc built on EfsPotato by @zcgonvh and PetitPotam by @topotam
   -c, --clsid=VALUE          CLSID (default BITS:
