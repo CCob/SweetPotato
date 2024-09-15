@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace SweetPotato {
     [ComImport]
@@ -9,7 +10,7 @@ namespace SweetPotato {
         // The user needs to allocate an STATSTG array whose size is celt.
         [PreserveSig]
         uint
-        Next(uint celt, [MarshalAs(UnmanagedType.LPArray), Out] STATSTG[] rgelt, out uint pceltFetched);
+        Next(uint celt, [MarshalAs(UnmanagedType.LPArray), Out] ComTypes.STATSTG[] rgelt, out uint pceltFetched);
 
         void Skip(uint celt);
 

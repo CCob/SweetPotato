@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ComTypes = System.Runtime.InteropServices.ComTypes;
 
 namespace SweetPotato {
 
@@ -93,14 +94,14 @@ namespace SweetPotato {
 
         }
 
-        public void SetElementTimes(string pwcsName, FILETIME[] pctime, FILETIME[] patime, FILETIME[] pmtime) {
+        public void SetElementTimes(string pwcsName, ComTypes.FILETIME[] pctime, ComTypes.FILETIME[] patime, ComTypes.FILETIME[] pmtime) {
 
         }
 
         public void SetStateBits(uint grfStateBits, uint grfMask) {
         }
 
-        public void Stat(STATSTG[] pstatstg, uint grfStatFlag) {
+        public void Stat(ComTypes.STATSTG[] pstatstg, uint grfStatFlag) {
             storage.Stat(pstatstg, grfStatFlag);
             pstatstg[0].pwcsName = "hello.stg";
         }
