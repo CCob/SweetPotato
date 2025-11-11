@@ -7,13 +7,13 @@ using System.Threading;
 using static SweetPotato.ImpersonationToken;
 
 namespace SweetPotato {
-    class Program {
+    public class Program {
 
         static void PrintHelp(OptionSet options) {                
             options.WriteOptionDescriptions(Console.Out);
         }
 
-        static void Main(string[] args) {
+        public static void Main(string[] args) {
 
             string clsId = "4991D34B-80A1-4291-83B6-3328366B9097";
             ushort port = 6666;
@@ -141,3 +141,4 @@ namespace SweetPotato {
         }
     }
 }
+

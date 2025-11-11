@@ -104,6 +104,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+	<DependenciesAssembly></DependenciesAssembly>
+  </PropertyGroup>
   <Import Project="packages\dnMerge.0.5.13\build\dnMerge.targets" Condition="Exists('packages\dnMerge.0.5.13\build\dnMerge.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -111,4 +114,5 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\dnMerge.0.5.13\build\dnMerge.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\dnMerge.0.5.13\build\dnMerge.targets'))" />
   </Target>
+
 </Project>
